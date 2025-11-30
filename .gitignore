@@ -1,0 +1,30 @@
+# Dépendances
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build / Logs
+dist/
+build/
+.log/
+logs/
+*.log
+
+# Environnements & secrets
+.env
+.env.local
+.env.*.local
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.iml
+
+# Coverage / tests
+coverage/
+.nyc_output/

@@ -1,0 +1,37 @@
+[
+  {
+    "profile_id": "DEFAULT_SMALL",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|size_group|colour_mode|department_code",
+    "optional_fields": "pages_supplied|stock_weight|stock_coating|finishing_guillotine|finishing_fold|finishing_saddle|finishing_wire|finishing_comb|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "ENVELOPE",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|size_group|department_code",
+    "optional_fields": "colour_mode|stock_weight|stock_coating|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "PLAN_POSTER",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|size_group|colour_mode|department_code",
+    "optional_fields": "stock_weight|stock_coating|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "NCR_FORM",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|size_group|carbonless_type|department_code",
+    "optional_fields": "stock_weight|stock_coating|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "LABEL",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|size_group|department_code",
+    "optional_fields": "colour_mode|stock_weight|stock_coating|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "SCANNING",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|size_group|department_code",
+    "optional_fields": "pages_supplied|notes|delivery_type|delivery_date_requested"
+  },
+  {
+    "profile_id": "FINISHING_ONLY",
+    "required_fields": "job_title|client_name|dept_section|deadline_date|quantity|department_code",
+    "optional_fields": "size_group|notes|delivery_type|delivery_date_requested"
+  }
+]

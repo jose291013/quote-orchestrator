@@ -1,0 +1,15 @@
+product_type_id,label,category,keywords,default_size_group,default_colour_mode,is_preprinted,pjm_engine_integration_id,required_fields_profile,notes
+BUSINESS_CARD_STD,Business Cards - Single sided,STATIONERY,"business card, cards, bc",BC,COLOUR,FALSE,11b0800c-e8c9-4038-99a0-b3a3ec192f49,DEFAULT_SMALL,
+BUSINESS_CARD_DBLE,Business Cards - Double sided,STATIONERY,"business card double, 2 sided",BC,COLOUR,FALSE,4c440b99-0c3b-4005-b466-29ec1815a5e9,DEFAULT_SMALL,
+BUSINESS_CARD_COUNCIL_SGL,Councillor Business Cards - Single,STATIONERY,councillor card,BC,COLOUR,TRUE,,DEFAULT_SMALL,Pré-imprimé d'après la rate card
+MEMO_PAD,Memorandum Pads,STATIONERY,"memo pad, notepad, bloc-notes",A5,EITHER,FALSE,,DEFAULT_SMALL,
+ENVELOPE_DL_PLAIN,DL COE Envelopes - Plain,STATIONERY,envelope dl plain,DL,B&W,TRUE,,ENVELOPE,
+ENVELOPE_C5_WINDOW,C5 COE Envelopes - Window,STATIONERY,envelope c5 window,C5,B&W,TRUE,,ENVELOPE,
+PRESENTATION_FOLDER,BCC Presentation Folders,STATIONERY,"presentation folder, pochette",A4,COLOUR,TRUE,,DEFAULT_SMALL,
+POSTER_A1_COLOUR,Colour Poster A1,PLAN_POSTER,"poster, affiche, plan a1",A1,COLOUR,FALSE,,PLAN_POSTER,
+PLAN_A1_BW,Plan Print A1 B&W,PLAN_POSTER,plan technique noir et blanc,A1,B&W,FALSE,,PLAN_POSTER,
+NCR_DUPLICATE,NCR Forms - Duplicate,NCR_FORM,"ncr, carbonless, duplicate",A4,B&W,FALSE,,NCR_FORM,
+LABEL_A4_SHEET,A4 Label Sheets,STATIONERY,"label, etiquette, a4 label",A4,EITHER,FALSE,,LABEL,
+SCANNING_PLAN,Plan Scanning,SCANNING,"scan plan, numérisation plan",A1,EITHER,FALSE,,SCANNING,
+BINDING_SADDLE,Booklet - Saddle Stitch,SERVICE,"booklet, saddle stitch, brochure",A4,EITHER,FALSE,,FINISHING_ONLY,
+LAMINATION_A3,Lamination A3,SERVICE,"lamination, plastification a3",A3,EITHER,FALSE,,FINISHING_ONLY,

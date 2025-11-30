@@ -1,0 +1,242 @@
+[
+  {
+    "field_id": "job_title",
+    "label_on_form": "Job Title",
+    "section": "HEADER",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "client_name",
+    "label_on_form": "Client Name",
+    "section": "HEADER",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "dept_section",
+    "label_on_form": "Dept/Section",
+    "section": "HEADER",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "project_no",
+    "label_on_form": "Project No.",
+    "section": "HEADER",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "activity_no",
+    "label_on_form": "Activity No.",
+    "section": "HEADER",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "deadline_date",
+    "label_on_form": "Deadline Due",
+    "section": "HEADER",
+    "data_type": "date",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "quantity",
+    "label_on_form": "Quantity Required",
+    "section": "JOB_DESCRIPTION",
+    "data_type": "int",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "pages_supplied",
+    "label_on_form": "Pages Supplied",
+    "section": "JOB_DESCRIPTION",
+    "data_type": "int",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "job_type",
+    "label_on_form": "Job Type (Flyers/Brochures/Posters/NCR/Business Cards/Other)",
+    "section": "JOB_TYPE",
+    "data_type": "enum",
+    "allowed_values": "FLYER|BROCHURE|POSTER|NCR|BUSINESS_CARD|OTHER",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "size_group",
+    "label_on_form": "Size (BC/DL/A6/A5/A4/A3/A2/A1/A0/Other)",
+    "section": "SIZE",
+    "data_type": "enum",
+    "allowed_values": "BC|DL|A6|A5|A4|A3|A2|A1|A0|OTHER",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "custom_size_mm",
+    "label_on_form": "Custom Size (mm x mm)",
+    "section": "SIZE",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "colour_mode",
+    "label_on_form": "Colour / B&W",
+    "section": "JOB_DESCRIPTION",
+    "data_type": "enum",
+    "allowed_values": "COLOUR|B&W|EITHER",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "stock_weight",
+    "label_on_form": "Stock Weight (gsm)",
+    "section": "STOCK",
+    "data_type": "enum",
+    "allowed_values": "80|100|128|148|200|250|300|350|400",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "stock_coating",
+    "label_on_form": "Stock Coating",
+    "section": "STOCK",
+    "data_type": "enum",
+    "allowed_values": "UNCOATED|MATT|GLOSS|RECYCLED|LABEL|OTHER",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "carbonless_type",
+    "label_on_form": "Carbonless Stock",
+    "section": "STOCK",
+    "data_type": "enum",
+    "allowed_values": "NONE|DUPLICATE|TRIPLICATE|QUAD",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "finishing_guillotine",
+    "label_on_form": "Guillotine / Trim",
+    "section": "FINISHING",
+    "data_type": "bool",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "finishing_fold",
+    "label_on_form": "Folding",
+    "section": "FINISHING",
+    "data_type": "bool",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "finishing_saddle",
+    "label_on_form": "Saddle Stitch",
+    "section": "FINISHING",
+    "data_type": "bool",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "finishing_wire",
+    "label_on_form": "Wire Bind",
+    "section": "FINISHING",
+    "data_type": "bool",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "finishing_comb",
+    "label_on_form": "Comb Bind",
+    "section": "FINISHING",
+    "data_type": "bool",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "notes",
+    "label_on_form": "Notes",
+    "section": "JOB_DESCRIPTION",
+    "data_type": "text",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "department_code",
+    "label_on_form": "Department / Cost Centre",
+    "section": "ADMIN",
+    "data_type": "string",
+    "allowed_values": "",
+    "is_required_global": "TRUE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "delivery_type",
+    "label_on_form": "Delivery / Pickup",
+    "section": "ADMIN",
+    "data_type": "enum",
+    "allowed_values": "DELIVERY|PICKUP",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  },
+  {
+    "field_id": "delivery_date_requested",
+    "label_on_form": "Requested Delivery Date",
+    "section": "ADMIN",
+    "data_type": "date",
+    "allowed_values": "",
+    "is_required_global": "FALSE",
+    "default_value": "",
+    "notes": ""
+  }
+]
