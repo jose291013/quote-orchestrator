@@ -229,7 +229,6 @@ app.post('/webhook/email', async (req, res) => {
       fromName = null
     } = req.body || {};
 
-    // Email + nom de la personne qui a envoyé la demande
     const requesterEmail = fromEmail;
     const requesterName = fromName;
 
@@ -238,7 +237,7 @@ app.post('/webhook/email', async (req, res) => {
     console.log('  fromEmail:', requesterEmail);
     console.log('  fromName:', requesterName);
 
-    // 🔹 Appel à l’IA (signature simple et claire)
+    // 🔹 Appel IA
     const aiResult = await callAiForEmail(
       subject,
       body,
@@ -249,10 +248,12 @@ app.post('/webhook/email', async (req, res) => {
     // 🔹 Mapping IA -> produit + champs manquants
     const { productTypeId, missingFields } = mapAiResultToProduct(aiResult);
 
-    // 🔹 Token de session
+    const classification = aiResult?.classification || null;      // "QUOTE_REQUEST" | "OTHER"
+    const isPrintRequest = !!aiResult?.is_print_request;
+
+    // 🔹 Token de session (on en garde un même si on passe à un humain)
     const token = crypto.randomBytes(16).toString('hex');
 
-    // 🔹 On stocke tout ce qui servira plus tard (formulaire + PJM)
     sessions[token] = {
       productTypeId,
       aiResult,
@@ -262,22 +263,44 @@ app.post('/webhook/email', async (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    // 🔹 Réponse à Albato / Postman
-return res.json({
-  action: 'NEED_COMPLETION_FORM',
-  productTypeId,
-  missingFields,
-  token,
-  formUrl: `${PUBLIC_BASE_URL}/form/${token}`
-});
+    // 🎯 CAS 1 — ce n’est PAS clairement une demande de devis
+    //   -> on envoie à un humain
+    if (!isPrintRequest || classification !== 'QUOTE_REQUEST' || !productTypeId) {
+      console.log('➡️ Not a clear quote request, forwarding to human.');
 
+      return res.json({
+        action: 'FORWARD_TO_HUMAN',
+        productTypeId: productTypeId || null,
+        missingFields: [],
+        classification,
+        reason: !isPrintRequest
+          ? 'Email not recognized as a print / quote request'
+          : !productTypeId
+          ? 'No confident product match for quote'
+          : 'Classification is not QUOTE_REQUEST',
+        token
+      });
+    }
+
+    // 🎯 CAS 2 — vraie demande de devis
+    console.log('➡️ Quote request detected for product', productTypeId);
+
+    return res.json({
+      action: 'NEED_COMPLETION_FORM',
+      productTypeId,
+      missingFields,
+      token,
+      formUrl: `${PUBLIC_BASE_URL}/form/${token}`
+    });
   } catch (err) {
-    console.error('Error in /webhook/email', err);
-    return res
-      .status(500)
-      .json({ error: 'Internal error in /webhook/email' });
+    console.error('❌ Error in /webhook/email:', err);
+    return res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: err.message || 'Unknown error'
+    });
   }
 });
+
 
 
 
