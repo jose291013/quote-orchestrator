@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const PJM_BASE_URL = process.env.PJM_BASE_URL;
 const PJM_USERNAME = process.env.PJM_USERNAME;
 const PJM_PASSWORD = process.env.PJM_PASSWORD;
-// URL publique de l'orchestrateur (Render en prod, localhost en dev)
 const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || 'http://localhost:4000';
 
 const DEBUG_MATCHING = true; // passe à false en prod pour calmer les logs
@@ -176,8 +175,8 @@ app.post('/incoming-email', async (req, res) => {
       productTypeId,
       missingFields,
       token,
-      formUrl
-    });
+      formUrl: `${PUBLIC_BASE_URL}/form/${token}`
+});
   } catch (err) {
     console.error('Error in /incoming-email:', err);
     return res
@@ -811,10 +810,7 @@ function inferPjmFieldType(pjmOption) {
 
 
 
-/**
- * Formulaire réel basé sur un token de session.
- * URL type : http://localhost:4000/form/<token>
- */
+
 // === Formulaire réel basé sur un token de session (version "wizard" PJM) ===
 app.get('/form/:token', async (req, res) => {
   const token = req.params.token;
