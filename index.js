@@ -2833,6 +2833,26 @@ function splitName(fullName) {
   return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
 }
 
+function extractPureEmail(str) {
+  if (!str) return null;
+  const s = String(str).trim();
+
+  // Cas "Nom <email@domain>"
+  const angleMatch = s.match(/<([^>]+)>/);
+  if (angleMatch && angleMatch[1]) {
+    return angleMatch[1].trim();
+  }
+
+  // Cas "mailto:email@domain"
+  if (/^mailto:/i.test(s)) {
+    return s.replace(/^mailto:/i, '').trim();
+  }
+
+  // Sinon on renvoie la chaîne telle quelle
+  return s;
+}
+
+
 // ---- Mapping interne : code de département -> nom d'organisation PJM ----
 // ⚠️ À ADAPTER : mets ici tes vrais codes + noms d'organisation PJM
 const DEPT_CODE_TO_ORG_NAME = {
@@ -2992,8 +3012,12 @@ async function createPjmJob(normalizedRequest, quote, productRow, session) {
   const url = `${PJM_BASE_URL}/public/jobs`;
 
   // Email du demandeur (celui qui a envoyé l'email original)
-  const requesterEmail =
-    session.requesterEmail || 'test@example.com';
+  const requesterEmailRaw =
+  session.requesterEmail || 'test@example.com';
+
+// On extrait une adresse propre "email@domain"
+const requesterEmailClean =
+  extractPureEmail(requesterEmailRaw) || 'test@example.com';
 
   // Nom "client" issu de l'IA
   const clientNameFromAi = normalizedRequest.clientName || 'Client';
