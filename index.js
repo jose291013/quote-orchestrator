@@ -2998,6 +2998,21 @@ function getOrgIntegrationIdFromSession(normalizedRequest, session) {
   return match ? match.integrationId : null;
 }
 
+function extractPureEmail(raw) {
+  if (!raw) return null;
+  const str = String(raw).trim();
+
+  // Cas "Nom <email@domaine.com>"
+  const match = str.match(/<([^>]+)>/);
+  if (match && match[1]) {
+    return match[1].trim();
+  }
+
+  // Sinon on renvoie la chaîne brute
+  return str;
+}
+
+
 
 /**
  * Crée un job dans PJM via /public/jobs avec statusName = "Estimate"
@@ -3012,12 +3027,12 @@ async function createPjmJob(normalizedRequest, quote, productRow, session) {
   const url = `${PJM_BASE_URL}/public/jobs`;
 
   // Email du demandeur (celui qui a envoyé l'email original)
-  const requesterEmailRaw =
-  session.requesterEmail || 'test@example.com';
+  const requesterEmailRaw = session && session.requesterEmail
+    ? session.requesterEmail
+    : 'test@example.com';
 
-// On extrait une adresse propre "email@domain"
-const requesterEmailClean =
-  extractPureEmail(requesterEmailRaw) || 'test@example.com';
+  const requesterEmail =
+    extractPureEmail(requesterEmailRaw) || 'test@example.com';
 
   // Nom "client" issu de l'IA
   const clientNameFromAi = normalizedRequest.clientName || 'Client';
@@ -3035,9 +3050,9 @@ const requesterEmailClean =
     effectiveLastName = split.lastName;
   }
 
-  const recipientFullName = `${effectiveFirstName || ''} ${
-    effectiveLastName || ''
-  }`.trim() || clientNameFromAi;
+  const recipientFullName =
+    `${effectiveFirstName || ''} ${effectiveLastName || ''}`.trim() ||
+    clientNameFromAi;
 
   // 1) Essayer de résoudre via la liste d'organisations déjà chargée dans la session
 let orgIntegrationId =
