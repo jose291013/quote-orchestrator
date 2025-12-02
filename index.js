@@ -1422,6 +1422,7 @@ app.get('/form/:token', async (req, res) => {
                     name="job_title"
                     value="${escapeHtml(jobTitleFromAi)}"
                     placeholder="e.g. Annual brochure 16 pages A4"
+                    required
                   />
                 </div>
 
@@ -1434,6 +1435,7 @@ app.get('/form/:token', async (req, res) => {
     list="orgList"
     value="${escapeHtml(deptCodeFromAi)}"
     placeholder="Start typing to search..."
+    required
   />
   <datalist id="orgList">
     ${orgOptionsHtml}
@@ -1467,6 +1469,7 @@ app.get('/form/:token', async (req, res) => {
                     type="text"
                     name="recipient_first_name"
                     value="${escapeHtml(defaultRecipientFirstName)}"
+                    required
                   />
                 </div>
 
@@ -1476,6 +1479,7 @@ app.get('/form/:token', async (req, res) => {
                     type="text"
                     name="recipient_last_name"
                     value="${escapeHtml(defaultRecipientLastName)}"
+                    required
                   />
                 </div>
 
