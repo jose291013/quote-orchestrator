@@ -137,6 +137,10 @@ app.post('/incoming-email', async (req, res) => {
       missingFields,
       lowConfidenceFields
     } = mapAiResultToProduct(aiResult);
+    // 👉 NOUVEAU : info multi-produits + résumé
+const multiRequestDetected = !!aiResult?.multi_request_detected;
+const multiRequestComment = aiResult?.multi_request_comment || null;
+const summaryForEmail = buildSummaryForEmail(aiResult, subject, fromName);
 
     // Si l’IA n’a pas trouvé de produit fiable → on renvoie aussi vers un humain
     if (!productTypeId) {
@@ -250,6 +254,10 @@ app.post('/webhook/email', async (req, res) => {
 
     const classification = aiResult?.classification || null;      // "QUOTE_REQUEST" | "OTHER"
     const isPrintRequest = !!aiResult?.is_print_request;
+        const multiRequestDetected = !!aiResult.multi_request_detected;
+    const multiRequestComment = aiResult.multi_request_comment || null;
+    const summaryForEmail = buildSummaryForEmail(aiResult, subject, requesterName);
+
 
     // 🔹 Token de session (on en garde un même si on passe à un humain)
     const token = crypto.randomBytes(16).toString('hex');
@@ -273,6 +281,10 @@ app.post('/webhook/email', async (req, res) => {
         productTypeId: productTypeId || null,
         missingFields: [],
         classification,
+        isPrintRequest,           // NOUVEAU
+    multiRequestDetected,     // NOUVEAU
+    multiRequestComment,      // NOUVEAU
+    summaryForEmail,          // NOUVEAU
         reason: !isPrintRequest
           ? 'Email not recognized as a print / quote request'
           : !productTypeId
@@ -285,13 +297,19 @@ app.post('/webhook/email', async (req, res) => {
     // 🎯 CAS 2 — vraie demande de devis
     console.log('➡️ Quote request detected for product', productTypeId);
 
-    return res.json({
-      action: 'NEED_COMPLETION_FORM',
-      productTypeId,
-      missingFields,
-      token,
-      formUrl: `${PUBLIC_BASE_URL}/form/${token}`
-    });
+return res.json({
+  action: 'NEED_COMPLETION_FORM',
+  productTypeId,
+  missingFields,
+  token,
+  formUrl: `${PUBLIC_BASE_URL}/form/${token}`,
+  // 👇 NOUVEAUX CHAMPS POUR L’EMAIL / ALBATO
+  isPrintRequest,
+  classification,
+  multiRequestDetected,
+  multiRequestComment,
+  summaryForEmail
+});
   } catch (err) {
     console.error('❌ Error in /webhook/email:', err);
     return res.status(500).json({
@@ -326,15 +344,110 @@ JSON structure:
   ],
   "fields": {
     "<field_id>": { "value": any, "confidence": number }
-  }
+  },
+  "multi_request_detected": boolean,
+  "multi_request_comment": string | null,
+  "user_friendly_summary": string
 }
 
-- "product_type_id" must be chosen from the list provided.
-- "fields" keys must match the field_id from the requestFields list I will give you.
-- If it is not a print job / quote request, set is_print_request=false
-  and product_candidates = [].
-- Do NOT include any text before or after the JSON. No commentary, no markdown.
+/**
+ * GENERAL RULES
+ *
+ * - "is_print_request": true if the email is clearly about printing something
+ *   (quote, order, reprint, etc.). Otherwise false.
+ *
+ * - "classification":
+ *   - "QUOTE_REQUEST" if the main intent is to get a price / quote.
+ *   - "OTHER" for anything else (general questions, complaints, etc.).
+ *
+ * - "product_candidates":
+ *   A ranked list of possible product types that best match the FIRST product
+ *   the customer is asking for. The server will map these IDs to PJM products.
+ *
+ * - "fields":
+ *   A dictionary where keys are logical field IDs (for example: "quantity",
+ *   "size_group", "pages", "sides", "finish", etc.). Each field has:
+ *   { "value": any, "confidence": number between 0 and 1 }.
+ *
+ * - "user_friendly_summary":
+ *   One or two short sentences in PLAIN ENGLISH summarising what the customer
+ *   is asking for, for the FIRST product only (product type, main quantity,
+ *   main options). Do not mention internal IDs, PJM, or prices.
+ *
+ *   Example:
+ *   "The customer is asking for 1,000 A4 colour flyers, double sided, on standard paper."
+ *
+ * - All booleans must be true/false (lowercase).
+ *   All JSON must be valid, no trailing commas, no comments, no explanations.
+ *
+ *
+ * MULTIPLE REQUESTS VS SINGLE PRODUCT
+ *
+ * The email can sometimes contain SEVERAL REQUESTS.
+ *
+ * Examples of multiple DIFFERENT products:
+ *  - "I need business cards and also a quote for a 32-page booklet."
+ *  - "Please quote 500 posters A2 and 1,000 brochures A4."
+ *
+ * Examples of single product with multiple options:
+ *  - "Please quote 500 and 1,000 copies of the same flyer."
+ *  - "Quote the same booklet on two different papers."
+ *
+ * RULES:
+ *
+ * 1) If the email clearly asks a quote for several DIFFERENT products
+ *    (different type of item: business cards + booklet + posters, etc.):
+ *
+ *    - Set "multi_request_detected": true.
+ *    - You MUST only consider the FIRST product mentioned when filling
+ *      "product_candidates" and "fields".
+ *    - The other products must be ignored in the structured fields.
+ *
+ *    - "multi_request_comment" must be a short explanation in English
+ *      (max 2 sentences) describing the other products that were mentioned
+ *      but are NOT processed.
+ *
+ *      Example:
+ *      "The customer also asked for a quote for a 32-page booklet and A2 posters, but only the business cards are processed."
+ *
+ * 2) If the email is about ONE product but with several quantities/options
+ *    for that same product:
+ *
+ *    - Set "multi_request_detected": false.
+ *    - "multi_request_comment" must be null.
+ *    - You can still put several values inside "fields" if it makes sense
+ *      (for example: a list of quantities), but it is considered one product.
+ *
+ *
+ * OUTPUT FORMAT
+ *
+ * - Always return a single JSON object with all required keys.
+ * - Never include any text outside the JSON.
+ * - If you are not sure about a value, set a low confidence (for example 0.3).
+ */
+
 `;
+
+function buildSummaryForEmail(aiResult, subject, requesterName) {
+  if (aiResult && typeof aiResult.user_friendly_summary === 'string' && aiResult.user_friendly_summary.trim() !== '') {
+    return aiResult.user_friendly_summary.trim();
+  }
+
+  const parts = [];
+
+  parts.push('Quote request');
+
+  if (requesterName) {
+    parts.push(`from ${requesterName}`);
+  }
+
+  if (subject) {
+    parts.push(`(subject: "${subject}")`);
+  }
+
+  return parts.join(' ') + '.';
+}
+
 
   const productsListForAi = products.map(p => ({
     product_type_id: p.product_type_id,
