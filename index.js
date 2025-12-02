@@ -913,6 +913,7 @@ app.get('/form/:token', async (req, res) => {
     orgOptionsHtml = orgs
       .map((o) => `<option value="${escapeHtml(o.name)}"></option>`)
       .join('');
+      session.pjmOrgs = orgs;
   } catch (err) {
     console.error(
       '❌ Could not fetch PJM organizations list:',
@@ -2962,6 +2963,20 @@ function logStringFieldsLengths(obj, prefix = '') {
     }
   });
 }
+function getOrgIntegrationIdFromSession(normalizedRequest, session) {
+  if (!session || !session.pjmOrgs) return null;
+
+  const rawName = normalizedRequest.departmentCode || normalizedRequest.deptSection;
+  if (!rawName) return null;
+
+  const sought = String(rawName).trim().toLowerCase();
+
+  const match = session.pjmOrgs.find(
+    (o) => o.name && o.name.trim().toLowerCase() === sought
+  );
+
+  return match ? match.integrationId : null;
+}
 
 
 /**
@@ -3000,8 +3015,21 @@ async function createPjmJob(normalizedRequest, quote, productRow, session) {
     effectiveLastName || ''
   }`.trim() || clientNameFromAi;
 
-  const orgIntegrationId =
+  // 1) Essayer de résoudre via la liste d'organisations déjà chargée dans la session
+let orgIntegrationId =
+  getOrgIntegrationIdFromSession(normalizedRequest, session);
+
+// 2) En fallback, garder ton ancienne logique (si tu veux absolument tenter /public/organizations/{name})
+if (!orgIntegrationId) {
+  orgIntegrationId =
     (await resolveOrgIntegrationIdFromRequest(normalizedRequest)) || null;
+}
+
+console.log('🔎 Organization used for PJM job:', {
+  departmentField: normalizedRequest.departmentCode,
+  orgIntegrationId
+});
+
 
   const engineSelections = session.engineSelections || {};
   const engineValues = Object.entries(engineSelections).map(
