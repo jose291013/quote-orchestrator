@@ -217,6 +217,34 @@ const summaryForEmail = buildSummaryForEmail(aiResult, subject, fromName);
   return { productTypeId, missingFields, lowConfidenceFields };
 }
 
+// Petite fonction utilitaire pour fabriquer un résumé lisible pour l'email
+function buildSummaryForEmail(aiResult, subject, requesterName) {
+  // Si l'IA a fourni un résumé propre, on le réutilise
+  if (
+    aiResult &&
+    typeof aiResult.user_friendly_summary === 'string' &&
+    aiResult.user_friendly_summary.trim() !== ''
+  ) {
+    return aiResult.user_friendly_summary.trim();
+  }
+
+  // Sinon, on fabrique un résumé simple à partir du sujet et du nom
+  const parts = [];
+
+  parts.push('Quote request');
+
+  if (requesterName) {
+    parts.push(`from ${requesterName}`);
+  }
+
+  if (subject) {
+    parts.push(`(subject: "${subject}")`);
+  }
+
+  return parts.join(' ') + '.';
+}
+
+
 /**
  * 1) Endpoint appelé par Albato (ou Postman pour tester)
  *    -> reçoit un email
