@@ -32,7 +32,7 @@
     "default_size_group": "DL",
     "default_colour_mode": "B&W",
     "is_preprinted": "TRUE",
-    "pjm_engine_integration_id": "",
+    "pjm_engine_integration_id": "cfaf5263-75c3-48c2-96e6-00d2e6be3902",
     "required_fields_profile": "ENVELOPE",
     "notes": ""
   },
@@ -40,11 +40,11 @@
     "product_type_id": "ENVELOPE_C5_WINDOW",
     "label": "C5 COE Envelopes - Window",
     "category": "STATIONERY",
-    "keywords": "envelope c5 window",
+    "keywords": "envelope c5 window, envelope,",
     "default_size_group": "C5",
     "default_colour_mode": "B&W",
     "is_preprinted": "TRUE",
-    "pjm_engine_integration_id": "",
+    "pjm_engine_integration_id": "cfaf5263-75c3-48c2-96e6-00d2e6be3902",
     "required_fields_profile": "ENVELOPE",
     "notes": ""
   },
